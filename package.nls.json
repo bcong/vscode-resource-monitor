@@ -1,0 +1,22 @@
+{
+    "extension.description": "CPU, GPU, RAM, Disk, Network stats in your status bar — like Task Manager, always visible.",
+    "config.title": "Resource Monitor",
+    "config.showCpu": "Show CPU usage percentage",
+    "config.showMemory": "Show memory (RAM) usage",
+    "config.showGpu": "Show GPU utilization percentage",
+    "config.showGpuMemory": "Show GPU memory (VRAM) usage",
+    "config.showDisk": "Show disk read/write speed",
+    "config.showNetwork": "Show network upload/download speed",
+    "config.showCpuTemp": "Show CPU temperature inline with CPU % (hardware sensor required)",
+    "config.showGpuTemp": "Show GPU temperature inline with GPU % (hardware sensor required)",
+    "config.showBattery": "Show battery level (laptop only)",
+    "config.showProcessCount": "Show number of running processes",
+    "config.updateInterval": "Update interval in milliseconds (min 500, max 30000)",
+    "config.statusBarPosition": "Status bar position: left or right",
+    "config.statusBarPriority": "Status bar priority — higher value appears closer to center",
+    "config.memoryUnit": "Memory display unit: GB, MB, or percent",
+    "config.networkUnit": "Network speed unit: auto, KB/s, or MB/s",
+    "config.order": "Display order of status bar items (left to right)",
+    "command.openSettings": "Resource Monitor: Open Settings",
+    "command.toggle": "Resource Monitor: Toggle Monitor"
+}

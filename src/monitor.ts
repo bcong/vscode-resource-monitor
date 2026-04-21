@@ -1,9 +1,10 @@
-import * as vscode from 'vscode';
-import * as si from 'systeminformation';
+import * as vscode from "vscode";
+import * as si from "systeminformation";
+import { t } from "./i18n";
 
-type ItemKey = 'cpu' | 'memory' | 'gpu' | 'gpuMemory' | 'disk' | 'network' | 'battery' | 'processCount';
+type ItemKey = "cpu" | "memory" | "gpu" | "gpuMemory" | "disk" | "network" | "battery" | "processCount";
 
-const DEFAULT_ORDER: ItemKey[] = ['cpu', 'memory', 'gpu', 'gpuMemory', 'disk', 'network', 'battery', 'processCount'];
+const DEFAULT_ORDER: ItemKey[] = ["cpu", "memory", "gpu", "gpuMemory", "disk", "network", "battery", "processCount"];
 
 interface MonitorConfig {
     showCpu: boolean;
@@ -17,51 +18,49 @@ interface MonitorConfig {
     showBattery: boolean;
     showProcessCount: boolean;
     updateInterval: number;
-    statusBarPosition: 'left' | 'right';
+    statusBarPosition: "left" | "right";
     statusBarPriority: number;
-    memoryUnit: 'GB' | 'MB' | 'percent';
-    networkUnit: 'auto' | 'KB/s' | 'MB/s';
+    memoryUnit: "GB" | "MB" | "percent";
+    networkUnit: "auto" | "KB/s" | "MB/s";
     order: ItemKey[];
 }
 
 function getConfig(): MonitorConfig {
-    const cfg = vscode.workspace.getConfiguration('resourceMonitor');
-    const rawOrder = cfg.get<string[]>('order', DEFAULT_ORDER);
-    const order: ItemKey[] = rawOrder.filter((k): k is ItemKey =>
-        DEFAULT_ORDER.includes(k as ItemKey)
-    );
+    const cfg = vscode.workspace.getConfiguration("resourceMonitor");
+    const rawOrder = cfg.get<string[]>("order", DEFAULT_ORDER);
+    const order: ItemKey[] = rawOrder.filter((k): k is ItemKey => DEFAULT_ORDER.includes(k as ItemKey));
     return {
-        showCpu: cfg.get<boolean>('showCpu', true),
-        showMemory: cfg.get<boolean>('showMemory', true),
-        showGpu: cfg.get<boolean>('showGpu', true),
-        showGpuMemory: cfg.get<boolean>('showGpuMemory', true),
-        showDisk: cfg.get<boolean>('showDisk', true),
-        showNetwork: cfg.get<boolean>('showNetwork', true),
-        showCpuTemp: cfg.get<boolean>('showCpuTemp', false),
-        showGpuTemp: cfg.get<boolean>('showGpuTemp', false),
-        showBattery: cfg.get<boolean>('showBattery', false),
-        showProcessCount: cfg.get<boolean>('showProcessCount', false),
-        updateInterval: cfg.get<number>('updateInterval', 2000),
-        statusBarPosition: cfg.get<'left' | 'right'>('statusBarPosition', 'right'),
-        statusBarPriority: cfg.get<number>('statusBarPriority', 100),
-        memoryUnit: cfg.get<'GB' | 'MB' | 'percent'>('memoryUnit', 'GB'),
-        networkUnit: cfg.get<'auto' | 'KB/s' | 'MB/s'>('networkUnit', 'auto'),
+        showCpu: cfg.get<boolean>("showCpu", true),
+        showMemory: cfg.get<boolean>("showMemory", true),
+        showGpu: cfg.get<boolean>("showGpu", true),
+        showGpuMemory: cfg.get<boolean>("showGpuMemory", true),
+        showDisk: cfg.get<boolean>("showDisk", true),
+        showNetwork: cfg.get<boolean>("showNetwork", true),
+        showCpuTemp: cfg.get<boolean>("showCpuTemp", false),
+        showGpuTemp: cfg.get<boolean>("showGpuTemp", false),
+        showBattery: cfg.get<boolean>("showBattery", false),
+        showProcessCount: cfg.get<boolean>("showProcessCount", false),
+        updateInterval: cfg.get<number>("updateInterval", 2000),
+        statusBarPosition: cfg.get<"left" | "right">("statusBarPosition", "right"),
+        statusBarPriority: cfg.get<number>("statusBarPriority", 100),
+        memoryUnit: cfg.get<"GB" | "MB" | "percent">("memoryUnit", "GB"),
+        networkUnit: cfg.get<"auto" | "KB/s" | "MB/s">("networkUnit", "auto"),
         order,
     };
 }
 
-function formatBytes(bytes: number, unit: 'auto' | 'KB/s' | 'MB/s'): string {
-    if (unit === 'MB/s' || (unit === 'auto' && bytes >= 1024 * 1024)) {
+function formatBytes(bytes: number, unit: "auto" | "KB/s" | "MB/s"): string {
+    if (unit === "MB/s" || (unit === "auto" && bytes >= 1024 * 1024)) {
         return `${(bytes / 1024 / 1024).toFixed(1)} MB/s`;
     }
     return `${(bytes / 1024).toFixed(1)} KB/s`;
 }
 
-function formatMemory(used: number, total: number, unit: 'GB' | 'MB' | 'percent'): string {
-    if (unit === 'percent') {
+function formatMemory(used: number, total: number, unit: "GB" | "MB" | "percent"): string {
+    if (unit === "percent") {
         return `${((used / total) * 100).toFixed(1)}%`;
     }
-    if (unit === 'MB') {
+    if (unit === "MB") {
         return `${(used / 1024 / 1024).toFixed(0)}/${(total / 1024 / 1024).toFixed(0)} MB`;
     }
     return `${(used / 1024 / 1024 / 1024).toFixed(1)}/${(total / 1024 / 1024 / 1024).toFixed(1)} GB`;
@@ -69,9 +68,13 @@ function formatMemory(used: number, total: number, unit: 'GB' | 'MB' | 'percent'
 
 function getBarColor(percent: number): string {
     // 상태 바 색상 구분: 낮음(정상)/중간(주의)/높음(위험)
-    if (percent >= 90) {return '$(error)';}
-    if (percent >= 70) {return '$(warning)';}
-    return '';
+    if (percent >= 90) {
+        return "$(error)";
+    }
+    if (percent >= 70) {
+        return "$(warning)";
+    }
+    return "";
 }
 
 export class ResourceMonitor {
@@ -85,22 +88,17 @@ export class ResourceMonitor {
         this.context = context;
         this.config = getConfig();
         const alignment =
-            this.config.statusBarPosition === 'left'
-                ? vscode.StatusBarAlignment.Left
-                : vscode.StatusBarAlignment.Right;
+            this.config.statusBarPosition === "left" ? vscode.StatusBarAlignment.Left : vscode.StatusBarAlignment.Right;
 
-        this.statusBarItem = vscode.window.createStatusBarItem(
-            alignment,
-            this.config.statusBarPriority
-        );
-        this.statusBarItem.command = 'resourceMonitor.openSettings';
-        this.statusBarItem.tooltip = 'Resource Monitor — 클릭하여 설정 열기';
+        this.statusBarItem = vscode.window.createStatusBarItem(alignment, this.config.statusBarPriority);
+        this.statusBarItem.command = "resourceMonitor.openSettings";
+        this.statusBarItem.tooltip = t("tooltip");
         context.subscriptions.push(this.statusBarItem);
     }
 
     start() {
         this.config = getConfig();
-        this.statusBarItem.text = '$(sync~spin) 리소스 로딩...';
+        this.statusBarItem.text = t("loading");
         this.statusBarItem.show();
         this.scheduleUpdate();
     }
@@ -117,11 +115,11 @@ export class ResourceMonitor {
         if (this.enabled) {
             this.statusBarItem.show();
             this.scheduleUpdate();
-            vscode.window.showInformationMessage('Resource Monitor: 활성화됨');
+            vscode.window.showInformationMessage(t("enabled"));
         } else {
             this.stop();
             this.statusBarItem.hide();
-            vscode.window.showInformationMessage('Resource Monitor: 비활성화됨');
+            vscode.window.showInformationMessage(t("disabled"));
         }
     }
 
@@ -131,15 +129,10 @@ export class ResourceMonitor {
         this.statusBarItem.dispose();
         this.config = getConfig();
         const alignment =
-            this.config.statusBarPosition === 'left'
-                ? vscode.StatusBarAlignment.Left
-                : vscode.StatusBarAlignment.Right;
-        this.statusBarItem = vscode.window.createStatusBarItem(
-            alignment,
-            this.config.statusBarPriority
-        );
-        this.statusBarItem.command = 'resourceMonitor.openSettings';
-        this.statusBarItem.tooltip = 'Resource Monitor — 클릭하여 설정 열기';
+            this.config.statusBarPosition === "left" ? vscode.StatusBarAlignment.Left : vscode.StatusBarAlignment.Right;
+        this.statusBarItem = vscode.window.createStatusBarItem(alignment, this.config.statusBarPriority);
+        this.statusBarItem.command = "resourceMonitor.openSettings";
+        this.statusBarItem.tooltip = t("tooltip");
         this.context.subscriptions.push(this.statusBarItem);
 
         if (this.enabled) {
@@ -153,13 +146,12 @@ export class ResourceMonitor {
     }
 
     private scheduleUpdate() {
-        if (!this.enabled) {return;}
+        if (!this.enabled) {
+            return;
+        }
         this.fetchAndUpdate().finally(() => {
             if (this.enabled) {
-                this.timer = setTimeout(
-                    () => this.scheduleUpdate(),
-                    this.config.updateInterval
-                );
+                this.timer = setTimeout(() => this.scheduleUpdate(), this.config.updateInterval);
             }
         });
     }
@@ -173,9 +165,7 @@ export class ResourceMonitor {
             if (cfg.showCpu) {
                 const [load, tempResult] = await Promise.all([
                     si.currentLoad(),
-                    cfg.showCpuTemp
-                        ? si.cpuTemperature().catch(() => null)
-                        : Promise.resolve(null),
+                    cfg.showCpuTemp ? si.cpuTemperature().catch(() => null) : Promise.resolve(null),
                 ]);
                 const pct = load.currentLoad;
                 const bar = getBarColor(pct);
@@ -183,7 +173,7 @@ export class ResourceMonitor {
                 if (tempResult && tempResult.main > 0) {
                     text += ` ${tempResult.main.toFixed(0)}°C`;
                 }
-                items.set('cpu', text);
+                items.set("cpu", text);
             }
 
             // ── 메모리 ────────────────────────────────────────
@@ -194,7 +184,7 @@ export class ResourceMonitor {
                 const pct = (used / total) * 100;
                 const bar = getBarColor(pct);
                 const label = formatMemory(used, total, cfg.memoryUnit);
-                items.set('memory', `${bar}$(server) RAM ${label}`);
+                items.set("memory", `${bar}$(server) RAM ${label}`);
             }
 
             // ── GPU / VRAM (온도 인라인) ───────────────────────
@@ -213,7 +203,7 @@ export class ResourceMonitor {
                             if (cfg.showGpuTemp && gpu.temperatureGpu != null && gpu.temperatureGpu > 0) {
                                 text += ` ${gpu.temperatureGpu.toFixed(0)}°C`;
                             }
-                            items.set('gpu', text);
+                            items.set("gpu", text);
                         }
 
                         if (cfg.showGpuMemory && gpu.memoryUsed != null && gpu.memoryTotal != null) {
@@ -222,8 +212,8 @@ export class ResourceMonitor {
                             const pct = (usedMB / totalMB) * 100;
                             const bar = getBarColor(pct);
                             items.set(
-                                'gpuMemory',
-                                `${bar}$(database) VRAM ${(usedMB / 1024).toFixed(1)}/${(totalMB / 1024).toFixed(1)} GB`
+                                "gpuMemory",
+                                `${bar}$(database) VRAM ${(usedMB / 1024).toFixed(1)}/${(totalMB / 1024).toFixed(1)} GB`,
                             );
                         }
                     }
@@ -240,8 +230,8 @@ export class ResourceMonitor {
                         const readSpeed = disk.rIO_sec ?? 0;
                         const writeSpeed = disk.wIO_sec ?? 0;
                         items.set(
-                            'disk',
-                            `$(arrow-down) ${formatBytes(readSpeed * 512, cfg.networkUnit)} $(arrow-up) ${formatBytes(writeSpeed * 512, cfg.networkUnit)} HDD`
+                            "disk",
+                            `$(arrow-down) ${formatBytes(readSpeed * 512, cfg.networkUnit)} $(arrow-up) ${formatBytes(writeSpeed * 512, cfg.networkUnit)} HDD`,
                         );
                     }
                 } catch {
@@ -261,8 +251,8 @@ export class ResourceMonitor {
                             txTotal += net.tx_sec ?? 0;
                         }
                         items.set(
-                            'network',
-                            `$(cloud-download) ${formatBytes(rxTotal, cfg.networkUnit)} $(cloud-upload) ${formatBytes(txTotal, cfg.networkUnit)}`
+                            "network",
+                            `$(cloud-download) ${formatBytes(rxTotal, cfg.networkUnit)} $(cloud-upload) ${formatBytes(txTotal, cfg.networkUnit)}`,
                         );
                     }
                 } catch {
@@ -275,8 +265,8 @@ export class ResourceMonitor {
                 try {
                     const battery = await si.battery();
                     if (battery.hasBattery) {
-                        const icon = battery.isCharging ? '$(plug)' : '$(battery)';
-                        items.set('battery', `${icon} ${battery.percent.toFixed(0)}%`);
+                        const icon = battery.isCharging ? "$(plug)" : "$(battery)";
+                        items.set("battery", `${icon} ${battery.percent.toFixed(0)}%`);
                     }
                 } catch {
                     // 배터리 미지원
@@ -287,14 +277,13 @@ export class ResourceMonitor {
             if (cfg.showProcessCount) {
                 try {
                     const procs = await si.processes();
-                    items.set('processCount', `$(list-unordered) ${procs.all} 프로세스`);
+                    items.set("processCount", `$(list-unordered) ${procs.all} ${t("processes")}`);
                 } catch {
                     // 프로세스 미지원
                 }
             }
-
         } catch (err) {
-            this.statusBarItem.text = '$(alert) 리소스 오류';
+            this.statusBarItem.text = t("error");
             return;
         }
 
@@ -302,13 +291,15 @@ export class ResourceMonitor {
         const parts: string[] = [];
         for (const key of cfg.order) {
             const item = items.get(key);
-            if (item) { parts.push(item); }
+            if (item) {
+                parts.push(item);
+            }
         }
 
         if (parts.length === 0) {
-            this.statusBarItem.text = '$(info) 모니터 비활성';
+            this.statusBarItem.text = t("inactive");
         } else {
-            this.statusBarItem.text = parts.join('  ');
+            this.statusBarItem.text = parts.join("  ");
         }
         this.statusBarItem.show();
     }

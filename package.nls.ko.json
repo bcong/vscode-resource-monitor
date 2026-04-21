@@ -1,0 +1,22 @@
+{
+    "extension.description": "CPU, GPU, RAM, 디스크, 네트워크 등 시스템 리소스를 상태 바에 표시합니다 — 작업 관리자처럼, 항상 눈에 보이게.",
+    "config.title": "리소스 모니터",
+    "config.showCpu": "CPU 사용률 표시",
+    "config.showMemory": "메모리(RAM) 사용량 표시",
+    "config.showGpu": "GPU 사용률 표시",
+    "config.showGpuMemory": "GPU 메모리(VRAM) 사용량 표시",
+    "config.showDisk": "디스크 읽기/쓰기 속도 표시",
+    "config.showNetwork": "네트워크 송수신 속도 표시",
+    "config.showCpuTemp": "CPU 온도를 CPU % 옆에 표시 (하드웨어 센서 지원 환경에서만 동작)",
+    "config.showGpuTemp": "GPU 온도를 GPU % 옆에 표시 (하드웨어 센서 지원 환경에서만 동작)",
+    "config.showBattery": "배터리 잔량 표시 (노트북 환경)",
+    "config.showProcessCount": "실행 중인 프로세스 수 표시",
+    "config.updateInterval": "업데이트 주기 (밀리초). 최소 500ms, 최대 30000ms",
+    "config.statusBarPosition": "상태 바 표시 위치: left(왼쪽) 또는 right(오른쪽)",
+    "config.statusBarPriority": "상태 바 우선순위 — 숫자가 클수록 더 중앙에 가깝게 배치",
+    "config.memoryUnit": "메모리 표시 단위: GB, MB 또는 퍼센트(%)",
+    "config.networkUnit": "네트워크 속도 단위: auto, KB/s 또는 MB/s",
+    "config.order": "상태 바 항목 표시 순서 (왼쪽부터 순서대로)",
+    "command.openSettings": "리소스 모니터: 설정 열기",
+    "command.toggle": "리소스 모니터: 모니터 켜기/끄기"
+}

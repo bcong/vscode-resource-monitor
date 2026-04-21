@@ -1,165 +1,191 @@
 {
-  "name": "vscode-resource-monitor",
-  "displayName": "Resource Monitor",
-  "description": "작업 관리자처럼 CPU, GPU, RAM, 디스크, 네트워크 등 시스템 리소스를 상태 바에 표시합니다.",
-  "version": "1.0.0",
-  "engines": {
-    "vscode": "^1.85.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onStartupFinished"
-  ],
-  "main": "./out/extension.js",
-  "contributes": {
-    "configuration": {
-      "title": "Resource Monitor",
-      "properties": {
-        "resourceMonitor.showCpu": {
-          "type": "boolean",
-          "default": true,
-          "description": "CPU 사용률 표시"
-        },
-        "resourceMonitor.showMemory": {
-          "type": "boolean",
-          "default": true,
-          "description": "메모리(RAM) 사용량 표시"
-        },
-        "resourceMonitor.showGpu": {
-          "type": "boolean",
-          "default": true,
-          "description": "GPU 사용률 표시"
-        },
-        "resourceMonitor.showGpuMemory": {
-          "type": "boolean",
-          "default": true,
-          "description": "GPU 메모리 사용량 표시"
-        },
-        "resourceMonitor.showDisk": {
-          "type": "boolean",
-          "default": true,
-          "description": "디스크 읽기/쓰기 속도 표시"
-        },
-        "resourceMonitor.showNetwork": {
-          "type": "boolean",
-          "default": true,
-          "description": "네트워크 송수신 속도 표시"
-        },
-        "resourceMonitor.showCpuTemp": {
-          "type": "boolean",
-          "default": false,
-          "description": "CPU 온도 표시 (지원 환경에서만 동작)"
-        },
-        "resourceMonitor.showGpuTemp": {
-          "type": "boolean",
-          "default": false,
-          "description": "GPU 온도 표시 (지원 환경에서만 동작)"
-        },
-        "resourceMonitor.showBattery": {
-          "type": "boolean",
-          "default": false,
-          "description": "배터리 잔량 표시 (노트북 환경)"
-        },
-        "resourceMonitor.showProcessCount": {
-          "type": "boolean",
-          "default": false,
-          "description": "실행 중인 프로세스 수 표시"
-        },
-        "resourceMonitor.updateInterval": {
-          "type": "number",
-          "default": 2000,
-          "minimum": 500,
-          "maximum": 30000,
-          "description": "업데이트 주기 (밀리초). 최소 500ms, 최대 30000ms"
-        },
-        "resourceMonitor.statusBarPosition": {
-          "type": "string",
-          "enum": [
-            "left",
-            "right"
-          ],
-          "default": "right",
-          "description": "상태 바 표시 위치 (left: 왼쪽, right: 오른쪽)"
-        },
-        "resourceMonitor.statusBarPriority": {
-          "type": "number",
-          "default": 100,
-          "description": "상태 바 우선순위 (숫자가 클수록 더 중앙에 가깝게 배치)"
-        },
-        "resourceMonitor.memoryUnit": {
-          "type": "string",
-          "enum": [
-            "GB",
-            "MB",
-            "percent"
-          ],
-          "default": "GB",
-          "description": "메모리 단위 (GB, MB, 퍼센트)"
-        },
-        "resourceMonitor.networkUnit": {
-          "type": "string",
-          "enum": [
-            "auto",
-            "KB/s",
-            "MB/s"
-          ],
-          "default": "auto",
-          "description": "네트워크 속도 단위"
-        },
-        "resourceMonitor.order": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "cpu",
-              "memory",
-              "gpu",
-              "gpuMemory",
-              "disk",
-              "network",
-              "battery",
-              "processCount"
-            ]
-          },
-          "default": [
-            "cpu",
-            "memory",
-            "gpu",
-            "gpuMemory",
-            "disk",
-            "network",
-            "battery",
-            "processCount"
-          ],
-          "description": "상태 바 항목 표시 순서. 배열 순서대로 왼쪽부터 표시됩니다."
-        }
-      }
+    "name": "vscode-resource-monitor",
+    "displayName": "VSCode Resource Monitor",
+    "description": "%extension.description%",
+    "version": "2026.421.235133",
+    "publisher": "vscode-resource-monitor",
+    "icon": "images/icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bcong"
     },
-    "commands": [
-      {
-        "command": "resourceMonitor.openSettings",
-        "title": "Resource Monitor: 설정 열기"
-      },
-      {
-        "command": "resourceMonitor.toggle",
-        "title": "Resource Monitor: 모니터 켜기/끄기"
-      }
-    ]
-  },
-  "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/vscode": "^1.85.0",
-    "typescript": "^5.3.0"
-  },
-  "dependencies": {
-    "systeminformation": "^5.22.0"
-  }
+    "bugs": {
+        "url": "https://github.com/bcong"
+    },
+    "homepage": "https://github.com/bcong",
+    "keywords": [
+        "cpu",
+        "gpu",
+        "ram",
+        "memory",
+        "disk",
+        "network",
+        "resource",
+        "monitor",
+        "status bar",
+        "system info",
+        "performance"
+    ],
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "configuration": {
+            "title": "%config.title%",
+            "properties": {
+                "resourceMonitor.showCpu": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%config.showCpu%"
+                },
+                "resourceMonitor.showMemory": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%config.showMemory%"
+                },
+                "resourceMonitor.showGpu": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%config.showGpu%"
+                },
+                "resourceMonitor.showGpuMemory": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%config.showGpuMemory%"
+                },
+                "resourceMonitor.showDisk": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%config.showDisk%"
+                },
+                "resourceMonitor.showNetwork": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%config.showNetwork%"
+                },
+                "resourceMonitor.showCpuTemp": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%config.showCpuTemp%"
+                },
+                "resourceMonitor.showGpuTemp": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%config.showGpuTemp%"
+                },
+                "resourceMonitor.showBattery": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%config.showBattery%"
+                },
+                "resourceMonitor.showProcessCount": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%config.showProcessCount%"
+                },
+                "resourceMonitor.updateInterval": {
+                    "type": "number",
+                    "default": 2000,
+                    "minimum": 500,
+                    "maximum": 30000,
+                    "description": "%config.updateInterval%"
+                },
+                "resourceMonitor.statusBarPosition": {
+                    "type": "string",
+                    "enum": [
+                        "left",
+                        "right"
+                    ],
+                    "default": "right",
+                    "description": "%config.statusBarPosition%"
+                },
+                "resourceMonitor.statusBarPriority": {
+                    "type": "number",
+                    "default": 100,
+                    "description": "%config.statusBarPriority%"
+                },
+                "resourceMonitor.memoryUnit": {
+                    "type": "string",
+                    "enum": [
+                        "GB",
+                        "MB",
+                        "percent"
+                    ],
+                    "default": "GB",
+                    "description": "%config.memoryUnit%"
+                },
+                "resourceMonitor.networkUnit": {
+                    "type": "string",
+                    "enum": [
+                        "auto",
+                        "KB/s",
+                        "MB/s"
+                    ],
+                    "default": "auto",
+                    "description": "%config.networkUnit%"
+                },
+                "resourceMonitor.order": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "cpu",
+                            "memory",
+                            "gpu",
+                            "gpuMemory",
+                            "disk",
+                            "network",
+                            "battery",
+                            "processCount"
+                        ]
+                    },
+                    "default": [
+                        "cpu",
+                        "memory",
+                        "gpu",
+                        "gpuMemory",
+                        "disk",
+                        "network",
+                        "battery",
+                        "processCount"
+                    ],
+                    "description": "%config.order%"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "resourceMonitor.openSettings",
+                "title": "%command.openSettings%"
+            },
+            {
+                "command": "resourceMonitor.toggle",
+                "title": "%command.toggle%"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile && npm run obfuscate",
+        "compile": "tsc -p ./",
+        "obfuscate": "node scripts/obfuscate.js",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "deploy": "vsce publish --no-yarn --allow-missing-repository"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "@types/vscode": "^1.85.0",
+        "javascript-obfuscator": "^5.4.1",
+        "typescript": "^5.3.0"
+    },
+    "dependencies": {
+        "systeminformation": "^5.22.0"
+    }
 }
